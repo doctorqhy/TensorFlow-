@@ -1,0 +1,53 @@
+import tensorflow as tf
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+mpl.rcParams['font.sans-serif']=['SimHei'] #指定默认字体 SimHei为黑体
+mpl.rcParams['axes.unicode_minus']=False
+
+image_data_raw = tf.gfile.FastGFile('output','rb').read()
+
+with tf.Session() as sess:
+
+    image_data = tf.image.decode_png(image_data_raw)
+    image_data = tf.image.convert_image_dtype(image_data,tf.float32)
+    image_data = tf.image.resize_images(image_data,[300,300],method=0)
+
+
+    #调整图片亮度
+    adjusted_1 = tf.image.adjust_brightness(image_data,-0.5)
+    adjusted_2 = tf.image.adjust_brightness(image_data,0.5)
+
+    #调整图片对比度
+    adjusted_3 = tf.image.adjust_contrast(image_data,0.5)
+    adjusted_4 = tf.image.adjust_contrast(image_data,5)
+
+    #调整图片色相
+    adjusted_5 = tf.image.adjust_hue(image_data,0.1)
+    adjusted_6 = tf.image.adjust_hue(image_data,0.3)
+
+    #调整图片饱和度
+    adjusted_7 = tf.image.adjust_saturation(image_data,-5)
+    adjusted_8 = tf.image.adjust_saturation(image_data,5)
+
+
+    fit = plt.figure(3)
+    plt.subplot(3,2,1)
+    plt.imshow(image_data.eval())
+    plt.title('原始图片')
+    plt.subplot(3, 2, 2)
+    plt.imshow(adjusted_1.eval())
+    plt.title('亮度-0.5')
+    plt.subplot(3, 2, 3)
+    plt.imshow(adjusted_2.eval())
+    plt.title('亮度+0.5')
+    plt.subplot(3, 2, 4)
+    plt.imshow(adjusted_3.eval())
+    plt.title('对比度x0.5')
+    plt.subplot(3, 2, 5)
+    plt.imshow(adjusted_4.eval())
+    plt.title('对比度x5')
+
+
+    plt.show()
+
