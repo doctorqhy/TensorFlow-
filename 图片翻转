@@ -1,0 +1,44 @@
+import tensorflow as tf
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+
+
+mpl.rcParams['font.sans-serif']=['SimHei'] #指定默认字体 SimHei为黑体
+mpl.rcParams['axes.unicode_minus']=False
+
+
+image_data_raw = tf.gfile.FastGFile('output','rb').read()
+
+with tf.Session() as sess:
+
+    image_data = tf.image.decode_png(image_data_raw)
+    #在调整大小之前先将数据转化为实数类型
+    image_data = tf.image.convert_image_dtype(image_data,tf.float32)
+
+    flipped_1 = tf.image.flip_up_down(image_data)
+    flipped_2 = tf.image.flip_left_right(image_data)
+    flipped_3 = tf.image.transpose_image(image_data)
+    flipped_4 = tf.image.random_flip_up_down(image_data)
+    flipped_5 = tf.image.random_flip_left_right(image_data)
+
+    fit = plt.figure('图像展示')
+    plt.subplot(2,3,1)
+    plt.imshow(image_data.eval())
+    plt.title('原始图像')
+    plt.subplot(2, 3, 2)
+    plt.imshow(flipped_1.eval())
+    plt.title('上下翻转')
+    plt.subplot(2, 3, 3)
+    plt.imshow(flipped_2.eval())
+    plt.title('左右翻转')
+    plt.subplot(2, 3, 4)
+    plt.imshow(flipped_3.eval())
+    plt.title('对角线翻转')
+    plt.subplot(2, 3, 5)
+    plt.imshow(flipped_4.eval())
+    plt.title('50%几率上下翻转')
+    plt.subplot(2, 3, 6)
+    plt.imshow(flipped_5.eval())
+    plt.title('50%几率左右翻转')
+    plt.show()
