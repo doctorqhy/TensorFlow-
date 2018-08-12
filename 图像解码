@@ -1,0 +1,19 @@
+import tensorflow as tf
+import matplotlib.pyplot as plt
+
+
+#打开图片
+image_raw_data = tf.gfile.FastGFile(r'D:\pycharm\PyCharm Community Edition 2017.2.3\TensorFlow\process_picture\1.png','rb').read()
+
+with tf.Session() as sess:
+
+    #解码
+    img_data = tf.image.decode_png(image_raw_data)
+
+    plt.imshow(img_data.eval())
+    plt.show()
+
+    #将图片重新编码并保存，打开该文件可以得到原始的图片
+    encode_image = tf.image.encode_png(img_data)
+    with tf.gfile.GFile('output','wb') as f:
+        f.write(encode_image.eval())
